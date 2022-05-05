@@ -1,2 +1,1 @@
-# hhlab
-Provide API for hhlab.dev
+# 工作日志
