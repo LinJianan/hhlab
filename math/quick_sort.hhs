@@ -3,7 +3,7 @@ function private_quick_sort(input) {
 
     // if the length is less than 10, then use insert sort
     // if the length is larger than 50, then there is risk for breaking the upper bound of recursion
-    if (input.length < 10 || input.length > 50) {
+    if (input.length < 10) {
         return private_insert_sort(input);
     }
 
