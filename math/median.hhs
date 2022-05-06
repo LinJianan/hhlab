@@ -35,7 +35,7 @@ function median(input) {
         for (let i = 0; i < length; i++) {
             array_sort.push(arguments[i]);
         }
-        array_sort.sort();
+        array_sort = private_quick_sort(array_sort);
 
         // depend on odd or even length
         if (length % 2 == 0) {
@@ -69,15 +69,20 @@ function median(input) {
 
         // in the case dimension = 1, e.g. [1, 2, 3, 4]
         if (dims == 1) {
-            raw_in.sort();
+            let array_sort = [];
             let length = raw_in.length;
+            for (let i = 0; i < length; i++) {
+                array_sort.push(raw_in[i]);
+            }
+            array_sort = private_quick_sort(array_sort);
+
             if (length % 2 == 0) {
-                let v1 = raw_in[length / 2], v2 = raw_in[length / 2 - 1];
+                let v1 = array_sort[length / 2], v2 = array_sort[length / 2 - 1];
                 let result = (v1 + v2) / 2;
                 return result;
             }
             else {
-                let result = raw_in[(length - 1) / 2];
+                let result = array_sort[(length - 1) / 2];
                 return result;
             }
         }
@@ -88,7 +93,7 @@ function median(input) {
             for (let i = 0; i < raw_in.length; i++) {
                 array_sort = array_sort.concat(raw_in[i]);
             }
-            array_sort.sort();
+            array_sort = private_quick_sort(array_sort);
             let length = array_sort.length;
             if (length % 2 == 0) {
                 let v1 = array_sort[length / 2], v2 = array_sort[length / 2 - 1];
@@ -105,6 +110,7 @@ function median(input) {
         // or it is a tensor
         else if (raw_in instanceof Tensor || (dims > 2 && is_number(dims))) {
             raw_in = flatten(raw_in);
+            raw_in = private_quick_sort(raw_in);
             let length = raw_in.length;
             if (length % 2 == 0) {
                 let v1 = raw_in[length / 2], v2 = raw_in[length / 2 - 1];
@@ -124,5 +130,66 @@ function median(input) {
 
     else {
         throw new Error('Invalid argument');
+    }
+
+    // when we use this function, we have ensured that input is an array
+    function private_quick_sort(input) {
+
+        // if the length is less than 10, then use insert sort
+        // if the length is larger than 50, then there is risk for breaking the upper bound of recursion
+        if (input.length < 10) {
+            return private_insert_sort(input);
+        }
+
+        let borderline = (input[0] + input[input.length - 1]) / 2;
+        let L = [], M = [], R = [];
+
+        // divide the elements into left and right
+        for (let i = 0; i < input.length; i++) {
+            if (input[i] < borderline) {
+                L.push(input[i]);
+            }
+            else if (input[i] == borderline) {
+                M.push(input[i]);
+            }
+            else {
+                R.push(input[i]);
+            }
+        }
+
+        // recursion
+        L = private_quick_sort(L);
+        R = private_quick_sort(R);
+
+        let result = L.concat(M).concat(R);
+        return result;
+    }
+
+    // when we use this function, we have ensured that input is an array
+    function private_insert_sort(input) {
+
+        // if the length is 0 or 1
+        if (input.length <= 1) {
+            return input;
+        }
+
+        // insert part
+        for (let i = 1; i < input.length; i++) {
+
+            // find the position to insert
+            let j = 0;
+            while (input[j] <= input[i] && j < i) {
+                j++;
+            }
+
+            // move the element
+            let temp = input[i];
+            for (let k = i; k > j; k--) {
+                input[k] = input[k - 1];
+            }
+            input[j] = temp;
+        }
+
+        return input;
     }
 }
