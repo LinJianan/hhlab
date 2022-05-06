@@ -46,5 +46,5 @@ function mean_test() {
         throw new Error('Failed unit test for Tensor for mean.');
     }
 
-    print("Mean test pass!");
+    //print("Mean test pass!");
 }
