@@ -8,12 +8,15 @@ function private_quick_sort(input) {
     }
 
     let borderline = (input[0] + input[input.length - 1]) / 2;
-    let L = [], R = [];
+    let L = [], M = [], R = [];
 
     // divide the elements into left and right
     for (let i = 0; i < input.length; i++) {
-        if (input[i] <= borderline) {
+        if (input[i] < borderline) {
             L.push(input[i]);
+        }
+        else if (input[i] == borderline) {
+            M.push(input[i]);
         }
         else {
             R.push(input[i]);
@@ -24,7 +27,7 @@ function private_quick_sort(input) {
     L = private_quick_sort(L);
     R = private_quick_sort(R);
 
-    let result = L.concat(R);
+    let result = L.concat(M).concat(R);
     return result;
 }
 
