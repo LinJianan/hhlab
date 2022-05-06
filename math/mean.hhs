@@ -41,7 +41,7 @@ function mean(input) {
 
     // at this time, we do not accept arguments = [matrix, axis]
     // we will add this function in the future
-    if (arguments.length != 1) {
+    if (!arguments.length === 1) {
         throw new Error('Wrong arguments');
     }
 
