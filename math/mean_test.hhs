@@ -1,5 +1,6 @@
 /**
  * @author Jianan Lin (林家南)
+ * Function of test unit for mean
  */
 
 *import math: mean
