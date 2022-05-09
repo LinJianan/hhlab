@@ -1,51 +1,45 @@
 /**
  * @author Jianan Lin (林家南)
- * Function of test unit for mean
+ * Function of test unit for multinomial
  */
 
-*import math: mean
+function multinomial_test() {
 
-function mean_test() {
+    *import math: multinomial
 
-    let b = [5,34,3];
-    let c = [[3,2,3],[3,4,3]];
-    let d = new Mat([3,4,2]);
-    let e = new Mat([[3,4],[4,3],[4,3]]);
-    let f = [[[2,2],[3,3],[4,4]],[[2,2],[3,3],[4,4]],[[4,4],[3,3],[2,2]]];
-    let g = [[1, 2], [3], [4, 5, 6]];
-    let h = new Tensor([[[1, 2], [3, 4]], [[5, 6], [7, 8]]]);
-
-    if (!mean(1, 2) === 1.5) {
-        throw new Error('Failed unit test for numbers for mean.');
+    if (multinomial(1, 2) !== 3) {
+        throw new Error('Failed unit test for numbers for multinomial.');
     }
 
-    if (!mean(b) === 14) {
-        throw new Error('Failed unit test for Array for mean.');
+    let a = [1, 2, 3];
+    if (multinomial(a) !== 60) {
+        throw new Error('Failed unit test for array for multinomial.');
     }
 
-    if (!mean(c) === 3) {
-        throw new Error('Failed unit test for Array for mean.');
+    let b = [[1, 2], [3]];
+    if (multinomial(b) !== 60) {
+        throw new Error('Failed unit test for array for multinomial.');
     }
 
-    if (!mean(d) === 3) {
-        throw new Error('Failed unit test for Matrix for mean.');
+    let c = mat([1, 2, 1]);
+    if (multinomial(c) !== 12) {
+        throw new Error('Failed unit test for matrix for multinomial.');
     }
 
-    if (!mean(e) === 3.5) {
-        throw new Error('Failed unit test for Matrix for mean.');
+    let d = mat([[1, 2], [1]]);
+    if (multinomial(d) !== 12) {
+        throw new Error('Failed unit test for matrix for multinomial.');
     }
 
-    if (!mean(f) === 3) {
-        throw new Error('Failed unit test for Array for mean.');
+    let e = new Tensor([2, 4])
+    if (multinomial(e) !== 15) {
+        throw new Error('Failed unit test for tensor for multinomial.');
+    }
+    
+    let f = new Tensor([[2, 1], [2]]);
+    if (multinomial(f) !== 30) {
+        throw new Error('Failed unit test for tensor for multinomial.');
     }
 
-    if (!mean(g) === 3.5) {
-        throw new Error('Failed unit test for Array for mean.');
-    }
-
-    if (!mean(h) === 4.5) {
-        throw new Error('Failed unit test for Tensor for mean.');
-    }
-
-    //print("Mean test pass!");
+    //print("multinomial test pass");
 }
