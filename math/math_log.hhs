@@ -1,0 +1,82 @@
+/**
+ * @author Jianan Lin (林家南)
+ * @param1 input - the number, array, matrix, tensor that you want to get log of
+ * @param2 (optional) base - the base which is usually mathjs.e or 10
+ * @returns - a number, array, matrix, tensor that represents the log
+ * 
+ */
+
+
+function math_log(input, base = mathjs.e) {
+
+    *import math: deep_copy
+    *import math: is_number
+
+    let length = arguments.length;
+    
+    // if there are no arguments, there is an error
+    if (length === 0) {
+        throw new Error('No argument given');
+    }
+    // too many arguments will be an error, also could be ignored
+    else if (length > 2) {
+        throw new Error('Too many arguments given');
+    }
+
+    // in case base is not valid
+    // since original log(-1) = NaN, here we allow some invalid input and return NaN
+    if (length === 2) {
+        if (!is_number(base)) {
+            throw new Error('Base must be a number');
+        }
+        else if (base <= 0) {
+            //throw new Error('Base must be positive');
+            return NaN;
+        }
+        else if (base === 1) {
+            //throw new Error('Base cannot be 1');
+            return NaN;
+        }
+    }
+
+    // if input is a number / Array
+    if (is_number(input) || input instanceof Array) {
+        return mathjs.log(input) / mathjs.log(base);
+    }
+
+    // if input is a Matrix
+    else if (input instanceof Mat) {
+        let result = mathjs.log(input.val) / mathjs.log(base);
+        return mat(result);
+    }
+    
+    // if input is a Tensor
+    else if (input instanceof Tensor) {
+        let result = mathjs.log(input.val) / mathjs.log(base);
+        return Tensor(result);
+    }
+}
+
+function log_test() {
+
+    let a = [4, 8];
+    let b = [[1, 2], [4, 8]];
+    let c = mat([[1, 2], [4, 8]]);
+    let d = Tensor([[[1, 2], [4, 8]], [[1, 2], [4, 8]]]);
+
+    if (!math_log(8, 2) === 3) {
+        throw new Error('Failed unit test for numbers for log.');
+    }
+
+    if (!math_log(0.5, 2) === -1) {
+        throw new Error('Failed unit test for numbers for log.');
+    }
+
+    if (!math_log(a, 3) === [1, 2]) {
+        throw new Error('Failed unit test for numbers for array.');
+    }
+
+}
+
+//log_test();
+print(mat([[[1, 2], [4, 8]], [[1, 2], [4, 8]]]) / 2)
