@@ -1,51 +1,32 @@
 /**
  * @author Jianan Lin (林家南)
- * Function of test unit for mean
+ * Function of test unit for reshape
  */
 
-*import math: mean
+function reshape_test() {
 
-function mean_test() {
+    *import math: reshape
 
-    let b = [5,34,3];
-    let c = [[3,2,3],[3,4,3]];
-    let d = new Mat([3,4,2]);
-    let e = new Mat([[3,4],[4,3],[4,3]]);
-    let f = [[[2,2],[3,3],[4,4]],[[2,2],[3,3],[4,4]],[[4,4],[3,3],[2,2]]];
-    let g = [[1, 2], [3], [4, 5, 6]];
-    let h = new Tensor([[[1, 2], [3, 4]], [[5, 6], [7, 8]]]);
-
-    if (!mean(1, 2) === 1.5) {
-        throw new Error('Failed unit test for numbers for mean.');
+    let a = [1, 2, 3, 4, 5, 6, 7, 8];
+    let b = reshape(a, [2, 2, 2]);
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 2; j++) {
+            for (let k = 0; k < 2; k++) {
+                if (b[i][j][k] !== 4 * i + 2 * j + k + 1) {
+                    throw new Error('Failed unit test for reshape.');
+                }
+            }
+        }
     }
 
-    if (!mean(b) === 14) {
-        throw new Error('Failed unit test for Array for mean.');
+    let c = reshape(a, [2, -1]);
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 4; j++) {
+            if (c[i][j] !== 4 * i + j + 1) {
+                throw new Error('Failed unit test for reshape.');
+            }
+        }
     }
 
-    if (!mean(c) === 3) {
-        throw new Error('Failed unit test for Array for mean.');
-    }
-
-    if (!mean(d) === 3) {
-        throw new Error('Failed unit test for Matrix for mean.');
-    }
-
-    if (!mean(e) === 3.5) {
-        throw new Error('Failed unit test for Matrix for mean.');
-    }
-
-    if (!mean(f) === 3) {
-        throw new Error('Failed unit test for Array for mean.');
-    }
-
-    if (!mean(g) === 3.5) {
-        throw new Error('Failed unit test for Array for mean.');
-    }
-
-    if (!mean(h) === 4.5) {
-        throw new Error('Failed unit test for Tensor for mean.');
-    }
-
-    //print("Mean test pass!");
+    //print('reshape test pass');
 }
