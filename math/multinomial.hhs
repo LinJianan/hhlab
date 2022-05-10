@@ -45,6 +45,10 @@ function multinomial(input) {
             throw new Error('Wrong argument number');
         }
 
+        if ( !(Array.isArray(arguments[0])) && !(arguments[0] instanceof Mat) && !(arguments[0] instanceof Tensor)) {
+            throw new Error('Exception occurred in multinomial - argument is of length 1, not a number, but is not a Mat, Tensor or JS Array');
+        }
+
         let in_type = input instanceof Mat || input instanceof Tensor;
         let raw_in = in_type ? input.clone().val : deep_copy(input);
         raw_in = flatten(raw_in);
