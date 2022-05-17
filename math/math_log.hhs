@@ -10,51 +10,81 @@
 function math_log(input, base = mathjs.e) {
 
     *import math: deep_copy
-    *import math: is_number
+    *import math: ndim
 
     let length = arguments.length;
     
     // if there are no arguments, there is an error
     if (length === 0) {
-        throw new Error('No argument given');
+        throw new Error('Exception occurred in log - no argument given');
     }
     // too many arguments will be an error, also could be ignored
     else if (length > 2) {
-        throw new Error('Too many arguments given');
+        throw new Error('Exception occurred in log - wrong argument number');
     }
 
     // in case base is not valid
-    // since original log(-1) = NaN, here we allow some invalid input and return NaN
+    // since original log(-1) = NaN, here we allow some invalid input and return NaN ?
     if (length === 2) {
-        if (!is_number(base)) {
-            throw new Error('Base must be a number');
+        if (!(typeof base === 'number')) {
+            throw new Error('Exception occurred in log - base must be a positive number and not 1');
         }
         else if (base <= 0) {
-            //throw new Error('Base must be positive');
-            return NaN;
+            throw new Error('Exception occurred in log - base must be a positive number and not 1');
         }
         else if (base === 1) {
-            //throw new Error('Base cannot be 1');
-            return NaN;
+            throw new Error('Exception occurred in log - base must be a positive number and not 1');
         }
     }
 
-    // if input is a number / Array
-    if (is_number(input) || input instanceof Array) {
-        return mathjs.log(input) / mathjs.log(base);
+    if (!(typeof input === 'number') && !(Array.isArray(input)) && !(input instanceof Mat) && !(input instanceof Tensor)) {
+        throw new Error('Exception occurred in log - input must be a number, array, matrix or tensor');
     }
 
-    // if input is a Matrix
-    else if (input instanceof Mat) {
-        let result = mathjs.log(input.val) / mathjs.log(base);
+    if (typeof input === 'number') {
+        if (input <= 0) {
+            throw new Error('Exception occurred in log - input must be positive number');
+        }
+        else {
+            return mathjs.log(input) / mathjs.log(base);
+        }
+    }
+
+    let in_type = (input instanceof Mat) || (input instanceof Tensor);
+    let raw_in = in_type ? input.clone().val : deep_copy(input);
+    let dims = ndim(raw_in);
+    let result = log_helper(raw_in, base);
+
+    if (ndim(result) === 1) {
+        return result;
+    }
+    else if (ndim(result) === 2) {
         return mat(result);
     }
-    
-    // if input is a Tensor
-    else if (input instanceof Tensor) {
-        let result = mathjs.log(input.val) / mathjs.log(base);
-        return Tensor(result);
+    else {
+        return new Tensor(result);
     }
+
+    function log_helper(input, base) {
+        let dim = ndim(input);
+        if (dim === 1) {
+            let result = deep_copy(input);
+            for (let i = 0; i < input.length; i++) {
+                result[i] = mathjs.log(input[i]) / mathjs.log(base);
+            }
+            return result;
+        }
+
+        else {
+            let result = [];
+            for (let i = 0; i < input.length; i++) {
+                let temp = log_helper(input[i], base);
+                result.push(temp);
+            }
+            return result
+        }
+    }
+
 }
 
 function log_test() {
@@ -62,21 +92,34 @@ function log_test() {
     let a = [4, 8];
     let b = [[1, 2], [4, 8]];
     let c = mat([[1, 2], [4, 8]]);
-    let d = Tensor([[[1, 2], [4, 8]], [[1, 2], [4, 8]]]);
+    let d = new Tensor([[[1, 2], [4, 8]], [[1, 2], [4, 8]]]);
 
-    if (!math_log(8, 2) === 3) {
+    if (!(math_log(8, 2) === 3)) {
         throw new Error('Failed unit test for numbers for log.');
     }
 
-    if (!math_log(0.5, 2) === -1) {
+    if (!(math_log(0.5, 2) === -1)) {
         throw new Error('Failed unit test for numbers for log.');
     }
 
-    if (!math_log(a, 3) === [1, 2]) {
+    if (!(math_log(a, 2) === [2, 3])) {
         throw new Error('Failed unit test for numbers for array.');
     }
 
+    if (!(math_log(b, 2) === mat([[0, 1], [2, 3]]))) {
+        throw new Error('Failed unit test for numbers for matrix.');
+    }
+
+    if (!(math_log(c, 2) === mat([[0, 1], [2, 3]]))) {
+        throw new Error('Failed unit test for numbers for matrix.');
+    }
+
+    let e = math_log(d, 2).val;
+    if (!(e[0] === [[0, 1], [2, 3]]) || !(e[1] === [[0, 1], [2, 3]])) {
+        throw new Error('Failed unit test for numbers for tensor.');
+    }
+
+    //print('log test pass');
 }
 
-//log_test();
-print(mat([[[1, 2], [4, 8]], [[1, 2], [4, 8]]]) / 2)
+log_test();
