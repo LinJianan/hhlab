@@ -87,3 +87,19 @@ log函数无限期暂停，重载和矩阵/向量除法设计有问题，需要�
 完成 quadratic_equation 函数
 
 在写 cubic_equation 函数，三次方程有点不太好解，今天肯定写不完
+
+**5.25**
+
+完成 cubic_equation 函数，研究四次方程解，天珩公式看起来有用
+
+**5.26**
+
+弄清楚了原理，开始写 quartic_equation 函数
+
+**5.27**
+
+完成 quartic_equation 函数
+
+**5.30**
+
+完成 resize 函数，跟 reshape 挺像的
