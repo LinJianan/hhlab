@@ -111,3 +111,7 @@ log函数无限期暂停，重载和矩阵/向量除法设计有问题，需要�
 完成 normalize 函数，把数据放在 0-1 之间
 
 打算重构 max 和 min 函数让它们支持 tensor
+
+**6.1**
+
+完成 is_local_min 和 is_local_max 函数，跟 matlab 一样，复制数组改 0 1
